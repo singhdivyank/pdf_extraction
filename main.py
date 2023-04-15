@@ -42,28 +42,16 @@ class MainClass:
         try:
             if not self.file_extension == 'pdf':
                 if self.file_type == 'invoice' or self.file_type == 'kyc':
-                    # upload the file to s3 bucket
-                    aws_ob = AWSConnect(self.file_name, self.file_type)
-                    aws_ob.upload_file()
                     # perform extraction
-                    invoice_ob = ImageExtraction(self.file_name, self.file_type)
+                    invoice_ob = ImageExtraction(self.file_name)
                     results = invoice_ob.process_file()
-                    # update results to DynamoDB table
-                    if results:
-                        aws_ob.dynamodb_func(results)
                 else:
                     print(f"{self.file_type} must be of jpg, png or jpeg formats")
             elif self.file_extension == 'pdf':
                 if self.file_type == 'resume':
-                    # upload file to s3 bucket
-                    aws_ob = AWSConnect(self.file_name, self.file_type)
-                    aws_ob.upload_file()
                     # perform extraction
                     resume_ob = ResumeExtraction(self.file_name)
                     results = resume_ob.process_resume()
-                    # update results to DynamoDB table
-                    if results:
-                        aws_ob.dynamodb_func(results)
                 else:
                     print(f"Currently only resume supported for pdf file type")
             else:
@@ -118,14 +106,17 @@ if __name__ == '__main__':
             sys.exit(0)
         
         main_ob = MainClass(file_name, file_type, file_extension)
-        extraction_result = main_ob.extraction_results()
-        if extraction_result:
+        extraction_results = main_ob.extraction_results()
+        if extraction_results:
+            # save them to dynamoDB
+            AWSConnect().dynamodb_func(extraction_results, file_type)
             # convert dict to string
             result_str = ""
-            for key, value in extraction_result.items():
+            for key, value in extraction_results.items():
                 result_str += key + ': ' + value + '\ ' # render in the form- Name: XXXX
             # convert the string to list
             result_ls = result_str.split("\ ")
+            # render on UI
             main_ob.render_results(result_ls)
         else:
             print(f"No results extracted for {file_name}")
