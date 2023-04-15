@@ -55,7 +55,7 @@ class MainClass:
                 else:
                     print(f"Currently only resume supported for pdf file type")
             else:
-                print("Invalid file name and extension provided")
+                print(f"Invalid file type {self.file_type} provided for {self.file_extension} extension")
         except Exception as error:
             print(f"extraction_results :: Exception :: {str(error)}")
         
@@ -101,7 +101,7 @@ if __name__ == '__main__':
     try:
         # check file extension
         if not file_extension in FILE_EXTENSIONS:
-            print(f"Invalid file type. Only {FILE_EXTENSIONS} supported. Execution time: {time.time() - start_time}")
+            print(f"Invalid file type. Only {FILE_EXTENSIONS} supported. Execution time: {time.time() - start_time} seconds")
             # exit and do not execute
             sys.exit(0)
         
