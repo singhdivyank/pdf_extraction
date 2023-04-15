@@ -47,6 +47,7 @@ class MainClass:
                     results = invoice_ob.process_file()
                 else:
                     print(f"{self.file_type} must be of jpg, png or jpeg formats")
+                    sys.exit(0)
             else:
                 if self.file_type == 'resume':
                     # perform extraction
@@ -54,6 +55,7 @@ class MainClass:
                     results = resume_ob.process_resume()
                 else:
                     print(f"Currently only resume supported for pdf file type")
+                    sys.exit(0)
         except Exception as error:
             print(f"extraction_results :: Exception :: {str(error)}")
         
