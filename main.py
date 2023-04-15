@@ -11,7 +11,7 @@ import time
 from tkinter import Tk, Text, END
 
 # import from files
-from aws_connect import AWSConnect
+from aws_connect import dynamodb_func
 from invoice import ImageExtraction
 from resume import ResumeExtraction
 from config import FILE_EXTENSIONS, TKINTER_CONSTS
@@ -109,7 +109,7 @@ if __name__ == '__main__':
         extraction_results = main_ob.extraction_results()
         if extraction_results:
             # save them to dynamoDB
-            AWSConnect().dynamodb_func(extraction_results, file_type)
+            dynamodb_func(extraction_results, file_type)
             # convert dict to string
             result_str = ""
             for key, value in extraction_results.items():
