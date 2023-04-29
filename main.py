@@ -7,14 +7,24 @@ import os
 import sys
 import time
 
+import openai
+
 # import from libraries
-from tkinter import Tk, Text, END
+from getpass import getpass
+from tkinter import (
+    Tk, 
+    Text, 
+    END
+)
 
 # import from files
 from aws_connect import dynamodb_func
 from invoice import ImageExtraction
 from resume import ResumeExtraction
-from config import FILE_EXTENSIONS, TKINTER_CONSTS
+from config import (
+    FILE_EXTENSIONS, 
+    TKINTER_CONSTS
+)
 
 # ui constants
 UI_TITLE = TKINTER_CONSTS.get('title')
@@ -22,6 +32,8 @@ UI_GEOMETRY = TKINTER_CONSTS.get('ui_geometry')
 # text dimensions
 TEXT_HEIGHT = TKINTER_CONSTS.get('text_height')
 TEXT_WIDTH = TKINTER_CONSTS.get('text_width')
+
+openai.api_key = getpass('OPENAI_API_KEY: ')
 
 
 class MainClass:
@@ -35,6 +47,8 @@ class MainClass:
 
         """
         perform extraction based on file type
+
+        return: dict
         """
 
         results = {}
@@ -109,7 +123,7 @@ if __name__ == '__main__':
         extraction_results = main_ob.extraction_results()
         if extraction_results:
             # save them to dynamoDB
-            dynamodb_func(extraction_results, file_type)
+            dynamodb_func(extraction_results, file_name, file_type)
             # convert dict to string
             result_str = ""
             for key, value in extraction_results.items():
