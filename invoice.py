@@ -1,20 +1,26 @@
 """
 extract all details from invoice using GPT
 """
-
-import os
-
+# required imports
 import openai
 
 from PIL import Image
 
+# import from file
 from aws_connect import textract_extraction
-from config import INVOICE_PROMPT, OPENAI_MODELS
-
-openai.api_key = os.getenv("OPENAI_KEY")
+# import constants
+from config import (
+    INVOICE_PROMPT, 
+    OPENAI_MODELS
+)
 
 
 class ImageExtraction:
+
+    """
+    using an OpenAI chat model
+    extract required contents 
+    """
 
     def __init__(self, image_file):
         self.img = Image.open(image_file)
